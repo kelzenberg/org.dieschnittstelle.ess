@@ -1,14 +1,18 @@
 package org.dieschnittstelle.ess.ser.client;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.concurrent.Future;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.Logger;
@@ -90,7 +94,11 @@ public class ShowTouchpointService {
         StationaryTouchpoint tp = new StationaryTouchpoint(-1,
                 "BHT Verkaufsstand", addr);
 
+//        StationaryTouchpoint tpTest = new StationaryTouchpoint(-1,
+//                "TEST Verkaufsstand", addr);
+
         createNewTouchpoint(tp);
+//        createNewTouchpoint(tpTest);
 
         try {
             client.close();
@@ -198,10 +206,10 @@ public class ShowTouchpointService {
      * http://stackoverflow.com/questions/10146692/how-do-i-write-to
      * -an-outpustream-using-defaulthttpclient
      *
-     * @param tp
+     * @param touchpoint
      */
-    public AbstractTouchpoint createNewTouchpoint(AbstractTouchpoint tp) {
-        logger.info("createNewTouchpoint(): will create: " + tp);
+    public AbstractTouchpoint createNewTouchpoint(AbstractTouchpoint touchpoint) {
+        logger.info("createNewTouchpoint(): will create touchpoint " + touchpoint);
 
         createClient();
 
@@ -210,38 +218,50 @@ public class ShowTouchpointService {
         try {
 
             // create post request for the api/touchpoints uri
-            HttpPost req = new HttpPost("http://localhost:8888/org.dieschnittstelle.ess.ser/api/touchpoints");
+            HttpPost request = new HttpPost("http://localhost:8888/org.dieschnittstelle.ess.ser/api/touchpoints");
 
             // create an ObjectOutputStream from a ByteArrayOutputStream - the
             // latter must be accessible via a variable
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ObjectOutputStream ObjectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
 
-            // write the object to the output stream
+            // write the touchpoint object to the output stream
+            ObjectOutputStream.writeObject(touchpoint);
 
             // create a ByteArrayEntity and pass it the byte array from the
             // output stream
+            ByteArrayEntity ByteArrayEntity = new ByteArrayEntity(byteArrayOutputStream.toByteArray());
 
             // set the entity on the request
+            request.setEntity(ByteArrayEntity);
 
             // execute the request, which will return a Future<HttpResponse> object
-
             // get the response from the Future object
+            HttpResponse response = (client.execute(request, null)).get();
 
             // log the status line
+            StatusLine statusLine = response.getStatusLine();
+            logger.info("createNewTouchpoint(): response status: " + statusLine);
 
             // evaluate the result using getStatusLine(), use constants in
             // HttpStatus
+            if (statusLine.getStatusCode() == HttpStatus.SC_CREATED) {
+                /* if successful: */
 
-            /* if successful: */
+                // create an object input stream using getContent() from the
+                // response entity (accessible via getEntity())
+                ObjectInputStream resObjectInputStream = new ObjectInputStream(response.getEntity().getContent());
 
-            // create an object input stream using getContent() from the
-            // response entity (accessible via getEntity())
+                // read the touchpoint object from the input stream
+                AbstractTouchpoint createdTouchpoint = (AbstractTouchpoint) resObjectInputStream.readObject();
+                logger.info("createNewTouchpoint(): created touchpoint: " + createdTouchpoint);
 
-            // read the touchpoint object from the input stream
+                // cleanup the request
+                 EntityUtils.consume(response.getEntity());
 
-            // cleanup the request
-            // EntityUtils.consume(response.getEntity());
-
-            // return the object that you have read from the response
+                // return the object that you have read from the response
+                return createdTouchpoint;
+            }
             return null;
         } catch (Exception e) {
             logger.error("got exception: " + e, e);

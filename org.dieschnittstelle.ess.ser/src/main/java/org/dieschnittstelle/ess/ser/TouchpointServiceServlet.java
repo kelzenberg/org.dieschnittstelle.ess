@@ -1,5 +1,6 @@
 package org.dieschnittstelle.ess.ser;
 
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import javax.servlet.ServletContext;
@@ -9,7 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import static org.dieschnittstelle.ess.utils.Utils.*;
 
+import org.apache.http.HttpResponse;
 import org.apache.logging.log4j.Logger;
+import org.dieschnittstelle.ess.entities.crm.AbstractTouchpoint;
 
 public class TouchpointServiceServlet extends HttpServlet {
 
@@ -58,21 +61,28 @@ public class TouchpointServiceServlet extends HttpServlet {
         // no need to check the uri that has been used
 
         // obtain the executor for reading out the touchpoints from the servlet context using the touchpointCRUD attribute
+        TouchpointCRUDExecutor touchpointCRUDExecutor = (TouchpointCRUDExecutor) getServletContext().getAttribute("touchpointCRUD");
 
         try {
             // create an ObjectInputStream from the request's input stream
+            ObjectInputStream reqObjectInputStream = new ObjectInputStream(request.getInputStream());
 
             // read an AbstractTouchpoint object from the stream
+            AbstractTouchpoint reqTouchpoint = (AbstractTouchpoint) reqObjectInputStream.readObject();
 
             // call the create method on the executor and take its return value
+            AbstractTouchpoint createdTouchpoint = touchpointCRUDExecutor.createTouchpoint(reqTouchpoint);
 
             // set the response status as successful, using the appropriate
             // constant from HttpServletResponse
+            response.setStatus(HttpServletResponse.SC_CREATED);
 
             // then write the object to the response's output stream, using a
             // wrapping ObjectOutputStream
+            ObjectOutputStream resObjectOutputStream = new ObjectOutputStream(response.getOutputStream());
 
             // ... and write the object to the stream
+            resObjectOutputStream.writeObject(createdTouchpoint);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
