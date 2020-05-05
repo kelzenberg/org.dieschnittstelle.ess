@@ -90,5 +90,40 @@ public class TouchpointServiceServlet extends HttpServlet {
 
     }
 
+    @Override
+    protected void doDelete(HttpServletRequest request,
+                            HttpServletResponse response) {
+        // obtain the executor for reading out the touchpoints from the servlet context using the touchpointCRUD attribute
+        TouchpointCRUDExecutor touchpointCRUDExecutor = (TouchpointCRUDExecutor) getServletContext().getAttribute("touchpointCRUD");
+
+        try {
+            // read touchpoint ID from path info (e.g. "/42") and parse it as long
+            String requestPathInfo = request.getPathInfo();
+            long touchpointIdFromPath = Long.parseLong(requestPathInfo.substring(1));
+
+            // call the create method on the executor and take its return value
+            boolean deletedTouchpoint = touchpointCRUDExecutor.deleteTouchpoint(touchpointIdFromPath);
+
+            if (deletedTouchpoint) {
+                // set the response status as successful, using the appropriate
+                // constant from HttpServletResponse
+                response.setStatus(HttpServletResponse.SC_OK);
+
+                // then write the object to the response's output stream, using a
+                // wrapping ObjectOutputStream
+                ObjectOutputStream resObjectOutputStream = new ObjectOutputStream(response.getOutputStream());
+
+                // ... and write the ID of the deleted touchpoint to the stream
+                resObjectOutputStream.writeObject(touchpointIdFromPath);
+            } else {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
 
 }
