@@ -7,43 +7,50 @@ import org.dieschnittstelle.ess.entities.erp.AbstractProduct;
 import org.dieschnittstelle.ess.entities.erp.IndividualisedProductItem;
 
 import org.dieschnittstelle.ess.jrs.IProductCRUDService;
+import org.jboss.resteasy.client.jaxrs.ResteasyClient;
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
 public class ProductCRUDRESTClient {
 
-	private IProductCRUDService serviceProxy;
-	
-	protected static Logger logger = org.apache.logging.log4j.LogManager.getLogger(ProductCRUDRESTClient.class);
+    private IProductCRUDService serviceProxy;
 
-	public ProductCRUDRESTClient() throws Exception {
+    protected static Logger logger = org.apache.logging.log4j.LogManager.getLogger(ProductCRUDRESTClient.class);
 
+    public ProductCRUDRESTClient() throws Exception {
 
-		/*
-		 * create a client for the web service using ResteasyClientBuilder and ResteasyWebTarget
-		 */
-		serviceProxy = null;
-	}
+        // for demo purposes: control whether we are accessing the synchronous or the asynchronous service
+        boolean async = false;
 
-	public AbstractProduct createProduct(IndividualisedProductItem prod) {
-		AbstractProduct created = serviceProxy.createProduct(prod);
-		// as a side-effect we set the id of the created product on the argument before returning
-		prod.setId(created.getId());
-		return created;
-	}
+        /*
+         * create a client for the web service using ResteasyClientBuilder and ResteasyWebTarget
+         */
+        ResteasyClient client = new ResteasyClientBuilder().build();
+        ResteasyWebTarget target = client.target("http://localhost:8888/org.dieschnittstelle.ess.jrs/api/" + (async ? "async/" : ""));
+        serviceProxy = target.proxy(IProductCRUDService.class);
+    }
 
-	public List<?> readAllProducts() {
-		return serviceProxy.readAllProducts();
-	}
+    public AbstractProduct createProduct(IndividualisedProductItem prod) {
+        AbstractProduct created = serviceProxy.createProduct(prod);
+        // as a side-effect we set the id of the created product on the argument before returning
+        prod.setId(created.getId());
+        return created;
+    }
 
-	public AbstractProduct updateProduct(AbstractProduct update) {
-		return serviceProxy.updateProduct(update.getId(),(IndividualisedProductItem)update);
-	}
+    public List<?> readAllProducts() {
+        return serviceProxy.readAllProducts();
+    }
 
-	public boolean deleteProduct(long id) {
-		return serviceProxy.deleteProduct(id);
-	}
+    public AbstractProduct updateProduct(AbstractProduct update) {
+        return serviceProxy.updateProduct(update.getId(), (IndividualisedProductItem) update);
+    }
 
-	public AbstractProduct readProduct(long id) {
-		return serviceProxy.readProduct(id);
-	}
+    public boolean deleteProduct(long id) {
+        return serviceProxy.deleteProduct(id);
+    }
+
+    public AbstractProduct readProduct(long id) {
+        return serviceProxy.readProduct(id);
+    }
 
 }
