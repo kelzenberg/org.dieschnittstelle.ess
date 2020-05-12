@@ -9,52 +9,54 @@ import org.dieschnittstelle.ess.entities.GenericCRUDEntity;
 /*
  * TODO JRS3: entfernen Sie die Auskommentierung der Annotation
  */
-//@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
+// add property @class with the respective AbstractProduct CLASS as a value to the response JSON
+// and also read property @class from the request JSON to find the correct AbstractProduct CLASS
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public abstract class AbstractProduct implements Serializable, GenericCRUDEntity {
 
-	protected static Logger logger = org.apache.logging.log4j.LogManager.getLogger(AbstractProduct.class);
+    protected static Logger logger = org.apache.logging.log4j.LogManager.getLogger(AbstractProduct.class);
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6940403029597060153L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 6940403029597060153L;
 
-	private long id;
+    private long id;
 
-	private String name;
-	
-	private int price;
+    private String name;
 
-	public AbstractProduct() {
-		logger.info("<constructor>");
-	}
+    private int price;
 
-	public AbstractProduct(String name) {
-		this.name = name;
-	}
+    public AbstractProduct() {
+        logger.info("<constructor>");
+    }
 
-	public long getId() {
-		return id;
-	}
+    public AbstractProduct(String name) {
+        this.name = name;
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public int getPrice() {
-		return price;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setPrice(int price) {
-		this.price = price;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
 
 }

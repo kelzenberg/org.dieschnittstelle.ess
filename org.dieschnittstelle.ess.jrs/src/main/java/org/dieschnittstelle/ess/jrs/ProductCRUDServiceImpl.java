@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.Logger;
 import org.dieschnittstelle.ess.entities.GenericCRUDExecutor;
-import org.dieschnittstelle.ess.entities.erp.IndividualisedProductItem;
+import org.dieschnittstelle.ess.entities.erp.AbstractProduct;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +21,7 @@ public class ProductCRUDServiceImpl implements IProductCRUDService {
     /**
      * this accessor will be provided by the ServletContext
      */
-    private GenericCRUDExecutor<IndividualisedProductItem> productCRUD;
+    private GenericCRUDExecutor<AbstractProduct> productCRUD;
 
     /**
      * here we will be passed the context parameters by the resteasy framework
@@ -31,30 +31,28 @@ public class ProductCRUDServiceImpl implements IProductCRUDService {
     public ProductCRUDServiceImpl(@Context ServletContext servletContext, @Context HttpServletRequest request) {
         logger.info("<constructor>: " + servletContext + "/" + request);
         // read out the dataAccessorS
-        this.productCRUD = (GenericCRUDExecutor<IndividualisedProductItem>) servletContext.getAttribute("productCRUD");
+        this.productCRUD = (GenericCRUDExecutor<AbstractProduct>) servletContext.getAttribute("productCRUD");
 
         logger.debug("read out the productCRUD from the servlet context: " + this.productCRUD);
     }
 
     @Override
-    public List<IndividualisedProductItem> readAllProducts() {
+    public List<AbstractProduct> readAllProducts() {
         return this.productCRUD.readAllObjects();
     }
 
     @Override
-    public IndividualisedProductItem readProduct(long id) {
+    public AbstractProduct readProduct(long id) {
         return this.productCRUD.readObject(id);
     }
 
     @Override
-    public IndividualisedProductItem createProduct(
-            IndividualisedProductItem prod) {
+    public AbstractProduct createProduct(AbstractProduct prod) {
         return this.productCRUD.createObject(prod);
     }
 
     @Override
-    public IndividualisedProductItem updateProduct(long id,
-                                                   IndividualisedProductItem update) {
+    public AbstractProduct updateProduct(long id, AbstractProduct update) {
         return this.productCRUD.updateObject(update);
     }
 
