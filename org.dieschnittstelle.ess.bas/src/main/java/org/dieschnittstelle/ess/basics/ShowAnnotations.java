@@ -4,6 +4,7 @@ package org.dieschnittstelle.ess.basics;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dieschnittstelle.ess.basics.annotations.AnnotatedStockItemBuilder;
+import org.dieschnittstelle.ess.basics.annotations.DisplayAs;
 import org.dieschnittstelle.ess.basics.annotations.StockItemProxyImpl;
 import org.dieschnittstelle.ess.basics.reflection.ReflectedStockItemBuilder;
 
@@ -48,11 +49,27 @@ public class ShowAnnotations {
         output.append(consumableClass.getSimpleName());
 
         for (Field field : consumableClass.getDeclaredFields()) {
-            String fieldName = field.getName();
+            String fieldName = null;
+            boolean hasAnnotation = field.isAnnotationPresent(DisplayAs.class);
+            if (hasAnnotation) {
+                DisplayAs currentDisplayAsAnnotation = field.getAnnotation(DisplayAs.class);
+                fieldName = currentDisplayAsAnnotation.value();
+            } else {
+                fieldName = field.getName();
+            }
+
             Method getter = null;
 
             for (Method method : consumableClass.getDeclaredMethods()) {
-                String methodName = method.getName().toLowerCase();
+                String methodName = null;
+                if (method.isAnnotationPresent(DisplayAs.class)) {
+                    DisplayAs currentDisplayAsAnnotation = method.getAnnotation(DisplayAs.class);
+                    methodName = currentDisplayAsAnnotation.value();
+                } else {
+                    methodName = method.getName();
+                }
+
+                methodName = methodName.toLowerCase();
                 String getFieldName = "get" + fieldName.toLowerCase();
 
                 if (methodName.equals(getFieldName)) {
@@ -74,7 +91,7 @@ public class ShowAnnotations {
                 e.printStackTrace();
             }
 
-            output.append(String.format(" %s:%s", fieldName, fieldValue));
+            output.append(String.format(" %s:%s", hasAnnotation ? fieldName + "(annotated)" : fieldName, fieldValue));
         }
 
         show("[class] " + consumableClass
