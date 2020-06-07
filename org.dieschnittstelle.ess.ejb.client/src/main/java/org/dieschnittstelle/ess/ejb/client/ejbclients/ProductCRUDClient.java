@@ -25,13 +25,6 @@ public class ProductCRUDClient implements ProductCRUDRemote {
 //        prod.setId(Constants.nextId());
 //        return prod;
 
-        ObjectMapper jsonMapper = new ObjectMapper();
-        try {
-            show("json to server: " + jsonMapper.writeValueAsString(prod));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
         // TODO: KOMMENTIEREN SIE DEN FOLGENDEN CODE, INKLUSIVE DER ID ZUWEISUNG, EIN
         AbstractProduct created = ejbProxy.createProduct(prod);
         // as a side-effect we set the id of the created product on the argument before returning
