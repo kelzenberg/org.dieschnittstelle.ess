@@ -24,9 +24,10 @@ public class StockItemCRUDStateless implements StockItemCRUDLocal {
 
     @Override
     public StockItem readStockItem(IndividualisedProductItem prod, PointOfSale pos) {
-        Query query = entityManager.createQuery("SELECT si FROM StockItem si WHERE si.pos = " + pos.getId() + " AND si.product = " + prod.getId());
-        List<StockItem> stockItems = query.getResultList();
-        return stockItems.size() > 0 ? stockItems.get(0) : null;
+//        Query query = entityManager.createQuery("SELECT si FROM StockItem si WHERE si.pos = " + pos.getId() + " AND si.product = " + prod.getId());
+//        List<StockItem> stockItems = query.getResultList();
+//        return stockItems.size() > 0 ? stockItems.get(0) : null;
+        return entityManager.find(StockItem.class, new ProductAtPosPK(prod, pos));
     }
 
     @Override
