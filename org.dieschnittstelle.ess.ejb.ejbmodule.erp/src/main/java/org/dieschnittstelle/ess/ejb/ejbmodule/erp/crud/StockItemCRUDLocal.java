@@ -3,6 +3,7 @@ package org.dieschnittstelle.ess.ejb.ejbmodule.erp.crud;
 import java.util.List;
 
 import javax.ejb.Local;
+import javax.ejb.Stateless;
 
 import org.dieschnittstelle.ess.entities.erp.IndividualisedProductItem;
 import org.dieschnittstelle.ess.entities.erp.PointOfSale;
@@ -13,6 +14,8 @@ import org.dieschnittstelle.ess.entities.erp.StockItem;
  * this interface shall be implemented using a stateless EJB with an EntityManager.
  * See the comments below for hints at how to implement the methods
  */
+@Stateless
+@Local
 public interface StockItemCRUDLocal {
 
     /*
@@ -55,9 +58,9 @@ public interface StockItemCRUDLocal {
 
     /*
      * here you can create a Query using the id of the prod object -
-	 * see readAllTransactionsForTouchpointAndCustomer() in
-	 * CustomerTransactionCRUDStateless (in .ess.ejbmodule.crm) as an
-	 * example
+     * see readAllTransactionsForTouchpointAndCustomer() in
+     * CustomerTransactionCRUDStateless (in .ess.ejbmodule.crm) as an
+     * example
      */
     public List<StockItem> readStockItemsForProduct(IndividualisedProductItem prod);
 

@@ -2,6 +2,9 @@ package org.dieschnittstelle.ess.ejb.ejbmodule.erp;
 
 import org.dieschnittstelle.ess.entities.erp.IndividualisedProductItem;
 
+import javax.ejb.Remote;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
@@ -11,41 +14,55 @@ import java.util.List;
  * - in the EJB implementation, delegate method invocations to the corresponding methods of the StockSystem EJB via the local interface
  * - let the StockSystemClient in the client project access the web api via this interface - see ShoppingCartClient for an example
  */
+@Remote
+@Path("/stocksystem")
+@Produces({MediaType.APPLICATION_JSON})
+@Consumes({MediaType.APPLICATION_JSON})
 public interface StockSystemRESTService {
 
-	/**
-	 * adds some units of a product to the stock of a point of sale
-	 */
-    void addToStock(long productId, long pointOfSaleId, int units);
+    /**
+     * adds some units of a product to the stock of a point of sale
+     */
+    @POST
+    void addToStock(@QueryParam("productId") long productId, @QueryParam("posId") long pointOfSaleId, @QueryParam("units") int units);
 
-	/**
-	 * removes some units of a product from the stock of a point of sale
-	 */
-    void removeFromStock(long productId, long pointOfSaleId, int units);
+    /**
+     * removes some units of a product from the stock of a point of sale
+     */
+    @DELETE
+    void removeFromStock(@QueryParam("productId") long productId, @QueryParam("posId") long pointOfSaleId, @QueryParam("units") int units);
 
-	/**
-	 * returns all products on stock of some pointOfSale
-	 */
-    List<IndividualisedProductItem> getProductsOnStock(long pointOfSaleId);
+    /**
+     * returns all products on stock of some pointOfSale
+     */
+    @GET
+    @Path("/products")
+    List<IndividualisedProductItem> getProductsOnStock(@QueryParam("posId") long pointOfSaleId);
 
-	/**
-	 * returns all products on stock
-	 */
+    /**
+     * returns all products on stock
+     */
+    @GET
+    @Path("/products")
     List<IndividualisedProductItem> getAllProductsOnStock();
 
-	/**
-	 * returns the units on stock for a product at some point of sale
-	 */
-    int getUnitsOnStock(long productId, long pointOfSaleId);
+    /**
+     * returns the units on stock for a product at some point of sale
+     */
+    @GET
+    int getUnitsOnStock(@QueryParam("productId") long productId, @QueryParam("posId") long pointOfSaleId);
 
-	/**
-	 * returns the total number of units on stock for some product
-	 */
-    int getTotalUnitsOnStock(long productId);
+    /**
+     * returns the total number of units on stock for some product
+     */
+    @GET
+    int getTotalUnitsOnStock(@QueryParam("productId") long productId);
 
-	/**
-	 * returns the points of sale where some product is available
-	 */
-    List<Long> getPointsOfSale(long productId);
+    /**
+     * returns the points of sale where some product is available
+     */
+    @GET
+    @Path("/pos")
+    List<Long> getPointsOfSale(@QueryParam("productId") long productId);
 
 }
