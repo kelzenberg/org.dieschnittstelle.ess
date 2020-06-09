@@ -3,7 +3,9 @@ package org.dieschnittstelle.ess.ejb.ejbmodule.erp;
 
 import org.dieschnittstelle.ess.ejb.ejbmodule.erp.crud.PointOfSaleCRUDLocal;
 import org.dieschnittstelle.ess.ejb.ejbmodule.erp.crud.StockItemCRUDLocal;
+import org.dieschnittstelle.ess.entities.erp.AbstractProduct;
 import org.dieschnittstelle.ess.entities.erp.IndividualisedProductItem;
+import org.dieschnittstelle.ess.entities.erp.PointOfSale;
 import org.dieschnittstelle.ess.entities.erp.StockItem;
 
 import javax.ejb.EJB;
@@ -21,8 +23,14 @@ public class StockSystemSingleton implements StockSystemLocal {
 
     @Override
     public void addToStock(IndividualisedProductItem product, long pointOfSaleId, int units) {
-        System.out.println("addToStock(): stockItemCRUDLocal: " + stockItemCRUDLocal + " of class: " + stockItemCRUDLocal.getClass());
-        System.out.println("addToStock(): pointOfSaleCRUDLocal: " + pointOfSaleCRUDLocal + " of class: " + pointOfSaleCRUDLocal.getClass());
+        PointOfSale pointOfSale = pointOfSaleCRUDLocal.readPointOfSale(pointOfSaleId);
+        StockItem stockItem = stockItemCRUDLocal.readStockItem(product, pointOfSale);
+        if (stockItem == null) {
+            stockItemCRUDLocal.createStockItem(new StockItem(product, pointOfSale, units));
+            return;
+        }
+        stockItem.setUnits(stockItem.getUnits() + units);
+        stockItemCRUDLocal.updateStockItem(stockItem);
     }
 
     @Override
