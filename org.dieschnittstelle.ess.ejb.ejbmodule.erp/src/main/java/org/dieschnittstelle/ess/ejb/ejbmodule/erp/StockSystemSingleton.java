@@ -3,14 +3,16 @@ package org.dieschnittstelle.ess.ejb.ejbmodule.erp;
 
 import org.dieschnittstelle.ess.ejb.ejbmodule.erp.crud.PointOfSaleCRUDLocal;
 import org.dieschnittstelle.ess.ejb.ejbmodule.erp.crud.StockItemCRUDLocal;
-import org.dieschnittstelle.ess.entities.erp.AbstractProduct;
 import org.dieschnittstelle.ess.entities.erp.IndividualisedProductItem;
 import org.dieschnittstelle.ess.entities.erp.PointOfSale;
 import org.dieschnittstelle.ess.entities.erp.StockItem;
 
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Singleton
 public class StockSystemSingleton implements StockSystemLocal {
@@ -40,27 +42,39 @@ public class StockSystemSingleton implements StockSystemLocal {
 
     @Override
     public List<IndividualisedProductItem> getProductsOnStock(long pointOfSaleId) {
-        return null;
+        PointOfSale pointOfSale = pointOfSaleCRUDLocal.readPointOfSale(pointOfSaleId);
+        List<StockItem> stockItems = stockItemCRUDLocal.readStockItemsForPointOfSale(pointOfSale);
+        return stockItems.stream().map(StockItem::getProduct).collect(Collectors.toList());
     }
 
     @Override
     public List<IndividualisedProductItem> getAllProductsOnStock() {
-        return null;
+        List<PointOfSale> pointOfSales = pointOfSaleCRUDLocal.readAllPointsOfSale();
+        HashSet<IndividualisedProductItem> productItemsSet = new HashSet<>();
+
+        for (PointOfSale pointOfSale : pointOfSales) {
+            productItemsSet.addAll(getProductsOnStock(pointOfSale.getId()));
+        }
+        return new ArrayList<>(productItemsSet);
     }
 
     @Override
     public int getUnitsOnStock(IndividualisedProductItem product, long pointOfSaleId) {
-        return 0;
+        PointOfSale pointOfSale = pointOfSaleCRUDLocal.readPointOfSale(pointOfSaleId);
+        return stockItemCRUDLocal.readStockItem(product, pointOfSale).getUnits();
     }
 
     @Override
     public int getTotalUnitsOnStock(IndividualisedProductItem product) {
-        return 0;
+        List<StockItem> stockItems = stockItemCRUDLocal.readStockItemsForProduct(product);
+        return stockItems.stream().mapToInt(StockItem::getUnits).sum();
     }
 
     @Override
     public List<Long> getPointsOfSale(IndividualisedProductItem product) {
-        return null;
+        List<StockItem> stockItems = stockItemCRUDLocal.readStockItemsForProduct(product);
+
+        return stockItems.stream().map(stockItem -> stockItem.getPos().getId()).distinct().collect(Collectors.toList());
     }
 
     @Override

@@ -33,22 +33,27 @@ public class StockSystemRESTServiceImpl implements StockSystemRESTService {
 
     @Override
     public List<IndividualisedProductItem> getProductsOnStock(long pointOfSaleId) {
-        return null;
+        System.out.println("pointOfSaleId: " + pointOfSaleId);
+
+        return pointOfSaleId != -1
+                ? stockSystemLocal.getProductsOnStock(pointOfSaleId)
+                : getAllProductsOnStock();
     }
 
-    @Override
     public List<IndividualisedProductItem> getAllProductsOnStock() {
-        return null;
+        return stockSystemLocal.getAllProductsOnStock();
     }
 
     @Override
     public int getUnitsOnStock(long productId, long pointOfSaleId) {
-        return 0;
+        AbstractProduct product = productCRUDRemote.readProduct(productId);
+        return pointOfSaleId != -1
+                ? stockSystemLocal.getUnitsOnStock((IndividualisedProductItem) product, pointOfSaleId)
+                : getTotalUnitsOnStock(product);
     }
 
-    @Override
-    public int getTotalUnitsOnStock(long productId) {
-        return 0;
+    public int getTotalUnitsOnStock(AbstractProduct product) {
+        return stockSystemLocal.getTotalUnitsOnStock((IndividualisedProductItem) product);
     }
 
     @Override

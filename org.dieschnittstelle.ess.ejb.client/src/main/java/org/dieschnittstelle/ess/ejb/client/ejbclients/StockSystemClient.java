@@ -1,6 +1,5 @@
 package org.dieschnittstelle.ess.ejb.client.ejbclients;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.dieschnittstelle.ess.ejb.ejbmodule.erp.StockSystemRESTService;
@@ -57,12 +56,11 @@ public class StockSystemClient implements StockSystemRemote {
         }
     }
 
-    @Override
     public List<IndividualisedProductItem> getAllProductsOnStock() {
         if (ejbProxy != null) {
-            return this.ejbProxy.getAllProductsOnStock();
+            return this.ejbProxy.getProductsOnStock(-1);
         } else {
-            return this.serviceProxy.getAllProductsOnStock();
+            return this.serviceProxy.getProductsOnStock(-1);
         }
     }
 
@@ -75,12 +73,11 @@ public class StockSystemClient implements StockSystemRemote {
         }
     }
 
-    @Override
     public int getTotalUnitsOnStock(IndividualisedProductItem product) {
         if (ejbProxy != null) {
-            return this.ejbProxy.getTotalUnitsOnStock(product);
+            return this.ejbProxy.getUnitsOnStock(product, -1);
         } else {
-            return this.serviceProxy.getTotalUnitsOnStock(product.getId());
+            return this.serviceProxy.getUnitsOnStock(product.getId(), -1);
         }
     }
 

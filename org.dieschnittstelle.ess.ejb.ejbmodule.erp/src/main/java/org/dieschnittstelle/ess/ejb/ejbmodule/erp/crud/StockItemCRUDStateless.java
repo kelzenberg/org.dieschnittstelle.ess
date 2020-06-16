@@ -8,7 +8,6 @@ import org.dieschnittstelle.ess.entities.erp.StockItem;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import java.util.List;
 
 @Stateless
@@ -37,16 +36,16 @@ public class StockItemCRUDStateless implements StockItemCRUDLocal {
 
     @Override
     public List<StockItem> readAllStockItems() {
-        return null;
+        return entityManager.createQuery("SELECT si FROM StockItem").getResultList();
     }
 
     @Override
     public List<StockItem> readStockItemsForProduct(IndividualisedProductItem prod) {
-        return null;
+        return entityManager.createQuery("SELECT si FROM StockItem AS si WHERE si.product = " + prod.getId()).getResultList();
     }
 
     @Override
     public List<StockItem> readStockItemsForPointOfSale(PointOfSale pos) {
-        return null;
+        return entityManager.createQuery("SELECT si FROM StockItem AS si WHERE si.product = " + pos.getId()).getResultList();
     }
 }

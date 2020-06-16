@@ -42,9 +42,9 @@ public interface StockSystemRESTService {
     /**
      * returns all products on stock
      */
-    @GET
-    @Path("/products")
-    List<IndividualisedProductItem> getAllProductsOnStock();
+//    @GET
+//    @Path("/products")
+//    List<IndividualisedProductItem> getAllProductsOnStock();
 
     /**
      * returns the units on stock for a product at some point of sale
@@ -55,8 +55,8 @@ public interface StockSystemRESTService {
     /**
      * returns the total number of units on stock for some product
      */
-    @GET
-    int getTotalUnitsOnStock(@QueryParam("productId") long productId);
+//    @GET
+//    int getTotalUnitsOnStock(@QueryParam("productId") long productId);
 
     /**
      * returns the points of sale where some product is available
