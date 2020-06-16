@@ -36,16 +36,16 @@ public class StockItemCRUDStateless implements StockItemCRUDLocal {
 
     @Override
     public List<StockItem> readAllStockItems() {
-        return entityManager.createQuery("SELECT si FROM StockItem").getResultList();
+        return entityManager.createQuery("SELECT si FROM StockItem si").getResultList();
     }
 
     @Override
     public List<StockItem> readStockItemsForProduct(IndividualisedProductItem prod) {
-        return entityManager.createQuery("SELECT si FROM StockItem AS si WHERE si.product = " + prod.getId()).getResultList();
+        return entityManager.createQuery("SELECT si FROM StockItem si WHERE si.product = " + prod.getId()).getResultList();
     }
 
     @Override
     public List<StockItem> readStockItemsForPointOfSale(PointOfSale pos) {
-        return entityManager.createQuery("SELECT si FROM StockItem AS si WHERE si.product = " + pos.getId()).getResultList();
+        return entityManager.createQuery("SELECT si FROM StockItem si WHERE si.pos = " + pos.getId()).getResultList();
     }
 }

@@ -7,6 +7,7 @@ import org.dieschnittstelle.ess.entities.erp.IndividualisedProductItem;
 import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.ws.rs.BadRequestException;
 import java.util.List;
 
 @Remote(StockSystemRESTService.class)
@@ -47,7 +48,7 @@ public class StockSystemRESTServiceImpl implements StockSystemRESTService {
     @Override
     public int getUnitsOnStock(long productId, long pointOfSaleId) {
         AbstractProduct product = productCRUDRemote.readProduct(productId);
-        return pointOfSaleId != -1
+        return productId != -1 && pointOfSaleId != -1
                 ? stockSystemLocal.getUnitsOnStock((IndividualisedProductItem) product, pointOfSaleId)
                 : getTotalUnitsOnStock(product);
     }
@@ -58,6 +59,10 @@ public class StockSystemRESTServiceImpl implements StockSystemRESTService {
 
     @Override
     public List<Long> getPointsOfSale(long productId) {
-        return null;
+        AbstractProduct product = productCRUDRemote.readProduct(productId);
+        if (product instanceof IndividualisedProductItem) {
+            return stockSystemLocal.getPointsOfSale((IndividualisedProductItem) product);
+        }
+        throw new BadRequestException("productId " + productId + "does not refer to a product item");
     }
 }
