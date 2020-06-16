@@ -6,9 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.logging.log4j.Logger;
 import org.dieschnittstelle.ess.entities.GenericCRUDEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /*
  * TODO JRS3: entfernen Sie die Auskommentierung der Annotation
@@ -17,6 +15,7 @@ import javax.persistence.Id;
 // add property @class with the respective AbstractProduct CLASS as a value to the response JSON
 // and also read property @class from the request JSON to find the correct AbstractProduct CLASS
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
+@SequenceGenerator(name = "product_sequence", sequenceName = "product_id_sequence")
 public abstract class AbstractProduct implements Serializable, GenericCRUDEntity {
 
     protected static Logger logger = org.apache.logging.log4j.LogManager.getLogger(AbstractProduct.class);
@@ -27,7 +26,7 @@ public abstract class AbstractProduct implements Serializable, GenericCRUDEntity
     private static final long serialVersionUID = 6940403029597060153L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_sequence")
     private long id;
 
     private String name;

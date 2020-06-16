@@ -16,8 +16,7 @@ public class ProductCRUDStateless implements ProductCRUDRemote {
 
     @Override
     public AbstractProduct createProduct(AbstractProduct prod) {
-        entityManager.persist(prod);
-        return prod;
+        return entityManager.merge(prod);
     }
 
     @Override
@@ -38,6 +37,8 @@ public class ProductCRUDStateless implements ProductCRUDRemote {
 
     @Override
     public boolean deleteProduct(long productID) {
-        return false;
+        AbstractProduct product = entityManager.find(AbstractProduct.class, productID);
+        entityManager.remove(product);
+        return true;
     }
 }

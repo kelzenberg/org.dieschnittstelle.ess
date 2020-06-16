@@ -7,101 +7,106 @@ import org.apache.logging.log4j.Logger;
 import javax.persistence.*;
 import java.io.Serializable;
 
+@Entity
+@Table(name = "productbundle")
 public class ProductBundle implements Serializable {
 
-	protected static Logger logger = org.apache.logging.log4j.LogManager.getLogger(ProductBundle.class);
+    protected static Logger logger = org.apache.logging.log4j.LogManager.getLogger(ProductBundle.class);
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1501911067906145681L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1501911067906145681L;
 
-	private long id;
+    @Id
+    @GeneratedValue
+    private long id;
 
-	// this has been changed to AbstractProduct due to some jboss/jackson serialisation issue
-	// in wildfly 18, which throws an error on unmarshalling, probably due to @JsonTypeInfo
-	private AbstractProduct product;
+    // this has been changed to AbstractProduct due to some jboss/jackson serialisation issue
+    // in wildfly 18, which throws an error on unmarshalling, probably due to @JsonTypeInfo
+    @ManyToOne
+    private AbstractProduct product;
 
-	private int units;
+    private int units;
 
-	public ProductBundle() {
-		logger.info("<constructor>");
-	}
+    public ProductBundle() {
+        logger.info("<constructor>");
+    }
 
-	public ProductBundle(IndividualisedProductItem product, int units) {
-		this.units = units;
-		this.setProduct(product);
-	}
+    public ProductBundle(IndividualisedProductItem product, int units) {
+        this.units = units;
+        this.setProduct(product);
+    }
 
-	public AbstractProduct getProduct() {
-		return this.product;
-	}
+    public AbstractProduct getProduct() {
+        return this.product;
+    }
 
-	public void setProduct(AbstractProduct product) {
-		this.product = product;
-	}
+    public void setProduct(AbstractProduct product) {
+        this.product = product;
+    }
 
-	public int getUnits() {
-		return this.units;
-	}
+    public int getUnits() {
+        return this.units;
+    }
 
-	public void setUnits(int units) {
-		this.units = units;
-	}
+    public void setUnits(int units) {
+        this.units = units;
+    }
 
-	public String toString() {
-		return "<ProductBundle " + this.product + " (" + this.units + ")>";
-	}
+    public String toString() {
+        return "<ProductBundle " + this.product + " (" + this.units + ")>";
+    }
 
-	public long getId() {
-		return id;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public boolean equals(Object other) {
-		return EqualsBuilder.reflectionEquals(this, other);
-	}
+    public boolean equals(Object other) {
+        return EqualsBuilder.reflectionEquals(this, other);
+    }
 
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this, new String[] { "id" });
-	}
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this, new String[]{"id"});
+    }
 
-	@PostLoad
-	public void onPostLoad() {
-		logger.info("@PostLoad: " + this);
-	}
+    @PostLoad
+    public void onPostLoad() {
+        logger.info("@PostLoad: " + this);
+    }
 
-	@PostPersist
-	public void onPostPersist() {
-		logger.info("@PostPersist: " + this);
-	}
+    @PostPersist
+    public void onPostPersist() {
+        logger.info("@PostPersist: " + this);
+    }
 
-	@PostRemove
-	public void onPostRemove() {
-		logger.info("@PostRemove: " + this);
-	}
+    @PostRemove
+    public void onPostRemove() {
+        logger.info("@PostRemove: " + this);
+    }
 
-	@PostUpdate
-	public void onPostUpdate() {
-		logger.info("@PostUpdate: " + this);
-	}
+    @PostUpdate
+    public void onPostUpdate() {
+        logger.info("@PostUpdate: " + this);
+    }
 
-	@PrePersist
-	public void onPrePersist() {
-		logger.info("@PrePersist: " + this);
-	}
+    @PrePersist
+    public void onPrePersist() {
+        logger.info("@PrePersist: " + this);
+    }
 
-	@PreRemove
-	public void onPreRemove() {
-		logger.info("@PreRemove: " + this);
-	}
+    @PreRemove
+    public void onPreRemove() {
+        logger.info("@PreRemove: " + this);
+    }
 
-	@PreUpdate
-	public void onPreUpdate() {
-		logger.info("@PreUpdate: " + this);
-	}
+    @PreUpdate
+    public void onPreUpdate() {
+        logger.info("@PreUpdate: " + this);
+    }
 
 }

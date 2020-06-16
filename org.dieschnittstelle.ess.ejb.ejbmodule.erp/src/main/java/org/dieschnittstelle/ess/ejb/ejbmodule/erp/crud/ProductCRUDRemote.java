@@ -18,6 +18,7 @@ import java.util.List;
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
 public interface ProductCRUDRemote {
+
     @POST
     public AbstractProduct createProduct(AbstractProduct prod);
 
@@ -25,8 +26,7 @@ public interface ProductCRUDRemote {
     public List<AbstractProduct> readAllProducts();
 
     @PUT
-    @Path("{id}")
-    public AbstractProduct updateProduct(@PathParam("id") AbstractProduct update);
+    public AbstractProduct updateProduct(AbstractProduct update);
 
     @GET
     @Path("{id}")
