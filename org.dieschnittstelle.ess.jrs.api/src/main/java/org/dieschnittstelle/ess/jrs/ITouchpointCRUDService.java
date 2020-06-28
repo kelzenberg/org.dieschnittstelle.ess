@@ -10,23 +10,26 @@ import java.util.List;
 @Consumes({MediaType.APPLICATION_JSON})
 @Produces({MediaType.APPLICATION_JSON})
 public interface ITouchpointCRUDService {
-	
-	@GET
-	List<StationaryTouchpoint> readAllTouchpoints();
 
-	@GET
-	@Path("/{touchpointId}")
-	StationaryTouchpoint readTouchpoint(@PathParam("touchpointId") long id);
+    @GET
+    List<StationaryTouchpoint> readAllTouchpoints();
 
-	@POST
-	StationaryTouchpoint createTouchpoint(StationaryTouchpoint touchpoint);
-	
-	@DELETE
-	@Path("/{touchpointId}")
-	boolean deleteTouchpoint(@PathParam("touchpointId") long id);
-		
-	/*
-	 * TODO JRS1: add a new annotated method for using the updateTouchpoint functionality of TouchpointCRUDExecutor and implement it
-	 */
+    @GET
+    @Path("/{touchpointId}")
+    StationaryTouchpoint readTouchpoint(@PathParam("touchpointId") long id);
+
+    @POST
+    StationaryTouchpoint createTouchpoint(StationaryTouchpoint touchpoint);
+
+    @PUT
+    StationaryTouchpoint updateTouchpoint(StationaryTouchpoint touchpoint);
+
+    @DELETE
+    @Path("/{touchpointId}")
+    boolean deleteTouchpoint(@PathParam("touchpointId") long id);
+
+    /*
+     * TODO JRS1: add a new annotated method for using the updateTouchpoint functionality of TouchpointCRUDExecutor and implement it
+     */
 
 }
