@@ -7,10 +7,19 @@ import org.apache.logging.log4j.Logger;
 import org.dieschnittstelle.ess.entities.GenericCRUDEntity;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlType;
 
 /*
  * TODO JRS3: entfernen Sie die Auskommentierung der Annotation
  */
+
+// @XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(namespace = "http://dieschnittstelle.org/ess/entities/erp/ws")
+@XmlSeeAlso({IndividualisedProductItem.class, ProductType.class})
+
 @Entity
 // add property @class with the respective AbstractProduct CLASS as a value to the response JSON
 // and also read property @class from the request JSON to find the correct AbstractProduct CLASS

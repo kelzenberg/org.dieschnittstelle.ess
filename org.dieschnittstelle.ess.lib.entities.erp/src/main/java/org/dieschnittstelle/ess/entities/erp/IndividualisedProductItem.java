@@ -6,6 +6,13 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.logging.log4j.Logger;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlType;
+
+
+// @XmlAccessorType(XmlAccessType.PROPERTY)
+@XmlType(namespace = "http://dieschnittstelle.org/ess/entities/erp/ws")
 
 @Entity
 public class IndividualisedProductItem extends AbstractProduct implements Serializable {
