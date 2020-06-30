@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.Logger;
 import org.dieschnittstelle.ess.entities.crm.Address;
+import org.dieschnittstelle.ess.entities.crm.AbstractTouchpoint;
 import org.dieschnittstelle.ess.entities.crm.StationaryTouchpoint;
 import org.dieschnittstelle.ess.utils.Utils;
 import org.dieschnittstelle.ess.wsv.client.service.ITouchpointCRUDService;
@@ -47,7 +48,7 @@ public class AccessRESTServiceWithInterpreter {
         step();
 
         // 1) read out all touchpoints
-        List<StationaryTouchpoint> tps = serviceProxy.readAllTouchpoints();
+        List<AbstractTouchpoint> tps = serviceProxy.readAllTouchpoints();
         show("read all: " + tps);
 
 
@@ -64,9 +65,8 @@ public class AccessRESTServiceWithInterpreter {
 
         Address addr = new Address("Luxemburger Strasse", "10", "13353",
                 "Berlin");
-        StationaryTouchpoint tp = new StationaryTouchpoint(-1,
-                "BHT Verkaufsstand", addr);
-        tp = (StationaryTouchpoint) serviceProxy.createTouchpoint(tp);
+        AbstractTouchpoint tp = new StationaryTouchpoint(-1, "BHT Verkaufsstand", addr);
+        tp = serviceProxy.createTouchpoint(tp);
         show("created: " + tp);
 
         // TODO: comment-in the call to read() once this is handled
