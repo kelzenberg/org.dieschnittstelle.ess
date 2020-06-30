@@ -21,49 +21,49 @@ import org.apache.logging.log4j.Logger;
 @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
 public class TouchpointCRUDService {
 
-	protected static Logger logger = org.apache.logging.log4j.LogManager
-			.getLogger(TouchpointCRUDService.class);
+    protected static Logger logger = org.apache.logging.log4j.LogManager
+            .getLogger(TouchpointCRUDService.class);
 
-	@Resource
-	private WebServiceContext wscontext;
+    @Resource
+    private WebServiceContext wscontext;
 
-	public TouchpointCRUDService() {
-		logger.info("<constructor>");
-	}
+    public TouchpointCRUDService() {
+        logger.info("<constructor>");
+    }
 
-	@PostConstruct
-	@WebMethod(exclude = true)
-	public void initialiseContext() {
-		logger.info("@PostConstruct: the wscontext is: " + wscontext);
+    @PostConstruct
+    @WebMethod(exclude = true)
+    public void initialiseContext() {
+        logger.info("@PostConstruct: the wscontext is: " + wscontext);
 
-		// we cannot read out any context attributes (ServletContext,
-		// HttpServletRequest) from the WebServiceContext as this is only
-		// allowed from a thread that actually handles a particular request to a
-		// service operation
-		// wscontext.getMessageContext().get(MessageContext.SERVLET_CONTEXT);
-	}
+        // we cannot read out any context attributes (ServletContext,
+        // HttpServletRequest) from the WebServiceContext as this is only
+        // allowed from a thread that actually handles a particular request to a
+        // service operation
+        // wscontext.getMessageContext().get(MessageContext.SERVLET_CONTEXT);
+    }
 
-	@WebMethod
-	public List<AbstractTouchpoint> readAllTouchpoints() {
-		logger.info("readAllTouchpoints()");
+    @WebMethod
+    public List<AbstractTouchpoint> readAllTouchpoints() {
+        logger.info("readAllTouchpoints()");
 
-		logger.info("readAllTouchpoints(): I am: " + this);
-		
-		// we obtain the servlet context from the wscontext
-		ServletContext ctx = (ServletContext) wscontext.getMessageContext()
-				.get(MessageContext.SERVLET_CONTEXT);
-		logger.info("readAllTouchpoints(): servlet context is: " + ctx);
-		// we also read out the http request
-		HttpServletRequest httpRequest = (HttpServletRequest) wscontext
-				.getMessageContext().get(MessageContext.SERVLET_REQUEST);
-		logger.info("readAllTouchpoints(): servlet request is: " + httpRequest);
+        logger.info("readAllTouchpoints(): I am: " + this);
 
-		GenericCRUDExecutor<AbstractTouchpoint> touchpointCRUD = (GenericCRUDExecutor<AbstractTouchpoint>) ctx
-				.getAttribute("touchpointCRUD");
-		logger.info("readAllTouchpoints(): read touchpointCRUD from servletContext: "
-				+ touchpointCRUD);
-		
-		// check that more than one requests is handled by the same instance of this class simulataneously
+        // we obtain the servlet context from the wscontext
+        ServletContext ctx = (ServletContext) wscontext.getMessageContext()
+                .get(MessageContext.SERVLET_CONTEXT);
+        logger.info("readAllTouchpoints(): servlet context is: " + ctx);
+        // we also read out the http request
+        HttpServletRequest httpRequest = (HttpServletRequest) wscontext
+                .getMessageContext().get(MessageContext.SERVLET_REQUEST);
+        logger.info("readAllTouchpoints(): servlet request is: " + httpRequest);
+
+        GenericCRUDExecutor<AbstractTouchpoint> touchpointCRUD = (GenericCRUDExecutor<AbstractTouchpoint>) ctx
+                .getAttribute("touchpointCRUD");
+        logger.info("readAllTouchpoints(): read touchpointCRUD from servletContext: "
+                + touchpointCRUD);
+
+        // check that more than one requests is handled by the same instance of this class simulataneously
 //		try {
 //			Thread.sleep(30000);
 //		} catch (InterruptedException e) {
@@ -71,44 +71,43 @@ public class TouchpointCRUDService {
 //			e.printStackTrace();
 //		}
 
-		return touchpointCRUD.readAllObjects();
-	}
+        return touchpointCRUD.readAllObjects();
+    }
 
-	@WebMethod
-	public AbstractTouchpoint createTouchpoint(AbstractTouchpoint touchpoint) {
-		// obtain the CRUD executor from the servlet context
-		GenericCRUDExecutor<AbstractTouchpoint> touchpointCRUD = (GenericCRUDExecutor<AbstractTouchpoint>) ((ServletContext) wscontext
-				.getMessageContext().get(MessageContext.SERVLET_CONTEXT))
-				.getAttribute("touchpointCRUD");
+    @WebMethod
+    public AbstractTouchpoint createTouchpoint(AbstractTouchpoint touchpoint) {
+        // obtain the CRUD executor from the servlet context
+        GenericCRUDExecutor<AbstractTouchpoint> touchpointCRUD = (GenericCRUDExecutor<AbstractTouchpoint>) ((ServletContext) wscontext
+                .getMessageContext().get(MessageContext.SERVLET_CONTEXT))
+                .getAttribute("touchpointCRUD");
 
-		return (StationaryTouchpoint) touchpointCRUD
-				.createObject(touchpoint);
-	}
+        return (StationaryTouchpoint) touchpointCRUD
+                .createObject(touchpoint);
+    }
 
-	@WebMethod
-	public boolean deleteTouchpoint(long id) {
-		logger.info("deleteTouchpoint(): sleeping...");
+    @WebMethod
+    public boolean deleteTouchpoint(long id) {
+        logger.info("deleteTouchpoint(): sleeping...");
 
-		// for demonstrating async processing, we include a sleep here
-		try {
-			Thread.sleep(2000);
-		}
-		catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+        // for demonstrating async processing, we include a sleep here
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-		logger.info("deleteTouchpoint(): continuing...");
+        logger.info("deleteTouchpoint(): continuing...");
 
-		// obtain the CRUD executor from the servlet context
-		GenericCRUDExecutor<AbstractTouchpoint> touchpointCRUD = (GenericCRUDExecutor<AbstractTouchpoint>) ((ServletContext) wscontext
-				.getMessageContext().get(MessageContext.SERVLET_CONTEXT))
-				.getAttribute("touchpointCRUD");
+        // obtain the CRUD executor from the servlet context
+        GenericCRUDExecutor<AbstractTouchpoint> touchpointCRUD = (GenericCRUDExecutor<AbstractTouchpoint>) ((ServletContext) wscontext
+                .getMessageContext().get(MessageContext.SERVLET_CONTEXT))
+                .getAttribute("touchpointCRUD");
 
-		return touchpointCRUD.deleteObject(id);
-	}
-	
-	/*
-	 * TODO JWS3: erweitern Sie den Service
-	 */
+        return touchpointCRUD.deleteObject(id);
+    }
+
+    /*
+     * TODO JWS3: erweitern Sie den Service
+     */
 
 }
